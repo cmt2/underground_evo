@@ -1,0 +1,16 @@
+﻿,shoot,stem,leaf,leaf_under,leaf_not_under,bulb,stem_under,stem_not_under,corm,rhizome,root,normal_roots,root_tuber,disc_tub,cont_tub
+shoot,NA,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+stem,1,NA,0,0,0,0,0,0,0,0,0,0,0,0,0
+leaf,1,0,NA,0,0,0,0,0,0,0,0,0,0,0,0
+leaf_under,1,0,1,NA,0,0,0,0,0,0,0,0,0,0,0
+leaf_not_under,1,0,1,0,NA,0,0,0,0,0,0,0,0,0,0
+bulb,1,0,1,1,0,NA,0,0,0,0,0,0,0,0,0
+stem_under,1,1,0,0,0,0,NA,0,0,0,0,0,0,0,0
+stem_not_under,1,1,0,0,0,0,0,NA,0,0,0,0,0,0,0
+corm,1,1,0,0,0,0,1,0,NA,0,0,0,0,0,0
+rhizome,1,1,0,0,0,0,1,0,0,NA,0,0,0,0,0
+root,0,0,0,0,0,0,0,0,0,0,NA,0,0,0,0
+normal_roots,0,0,0,0,0,0,0,0,0,0,1,NA,0,0,0
+root_tuber,0,0,0,0,0,0,0,0,0,0,1,0,NA,0,0
+disc_tub,0,0,0,0,0,0,0,0,0,0,1,0,1,NA,0
+cont_tub,0,0,0,0,0,0,0,0,0,0,1,0,1,0,NA

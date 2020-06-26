@@ -1,0 +1,9 @@
+﻿,leaf_under,bulb,stem_under,corm,rhizome,root_tuber,disc_tub,cont_tub
+leaf_under,NA,0,0,0,0,0,0,0
+bulb,1,NA,0,0,0,0,0,0
+stem_under,0,0,NA,0,0,0,0,0
+corm,0,0,1,NA,0,0,0,0
+rhizome,0,0,1,0,NA,0,0,0
+root_tuber,0,0,0,0,0,NA,0,0
+disc_tub,0,0,0,0,0,1,NA,0
+cont_tub,0,0,0,0,0,1,0,NA
