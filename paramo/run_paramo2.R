@@ -1,11 +1,11 @@
 ### read in morph data (in correct format)
-morph_paramo <- read.csv("~/Documents/liliales_paper/data/morphology/morph_paramo.csv")
-  
+morph_paramo <- read.csv("data/morphology/morph_paramo.csv")
+
 ### read in dependency matrix 
-dep_mat <- as.matrix(read.csv("~/Documents/liliales_paper/data/morphology/depend_mat_revised.csv", row.names = 1))
+dep_mat <- as.matrix(read.csv("data/morphology/depend_mat_revised.csv", row.names = 1))
 
 ### read in trees
-trees <- ape::read.tree("~/Documents/liliales_paper/data/phylogeny/combined_subsampled_dated.tre")
+trees <- ape::read.tree("data/phylogeny/combined_subsampled_dated.tre")
 
 #### start PARAMO
 library(SCATE.shortcourse)
@@ -14,13 +14,15 @@ library(corHMM)
 ### loop over each tree
 
 # save character reconstructions to list 
+Qmats <- vector("list", length = length((length(trees)/2 + 1):length(trees)))
+names(Qmats) <- paste0("tree_", ((length(trees)/2 + 1):length(trees)))
 IND.maps <- vector("list", length = length((length(trees)/2 + 1):length(trees)))
 names(IND.maps) <- paste0("tree_", ((length(trees)/2 + 1):length(trees)))
 EntPhen.maps <-  vector("list", length = length((length(trees)/2 + 1):length(trees)))
 names(EntPhen.maps) <- paste0("tree_", ((length(trees)/2 + 1):length(trees)))
 
 # set number of simulations
-N = 100
+N = 1000
 
 for (i in (length(trees)/2 + 1):length(trees)) {
   print(paste0("working on tree ", i))
@@ -49,6 +51,12 @@ for (i in (length(trees)/2 + 1):length(trees)) {
   # must use corHMM version 1.22
   corhmm.fits <- amalgamated_fits_corHMM(td.comb, 
                                          amal.deps)
+  # save Q matrix for simulating later
+  Qmats[[i]] <- vector("list", length = length(corhmm.fits))
+  names(Qmats[[i]]) <- names(corhmm.fits)
+  Qmats[[i]][[1]] <- corhmm.fits[[1]]$solution
+  Qmats[[i]][[2]] <- corhmm.fits[[2]]$solution
+  Qmats[[i]][[3]] <- corhmm.fits[[3]]$solution
   
   # Create stochastic character maps per character
   sim_trees <- amalgamated_simmaps_phytools(corhmm.fits, nsim = N) # do 1000 for real version
@@ -73,9 +81,9 @@ for (i in (length(trees)/2 + 1):length(trees)) {
   
 }
 
-save(IND.maps, file = "~/Documents/liliales_paper/paramo/INDmaps2.RData")
-save(EntPhen.maps, file = "~/Documents/liliales_paper/paramo/EntPhenmaps2.RData")
-
+save(Qmats, file = "paramo/Qmats2.RData")
+save(IND.maps, file = "paramo/INDmaps2.RData")
+save(EntPhen.maps, file = "paramo/EntPhenmaps2.RData")
 
 
 

@@ -1,11 +1,11 @@
 ### read in morph data (in correct format)
-morph_paramo <- read.csv("~/Documents/liliales_paper/data/morphology/morph_paramo.csv")
+morph_paramo <- read.csv("data/morphology/morph_paramo.csv")
   
 ### read in dependency matrix 
-dep_mat <- as.matrix(read.csv("~/Documents/liliales_paper/data/morphology/depend_mat_revised.csv", row.names = 1))
+dep_mat <- as.matrix(read.csv("data/morphology/depend_mat_revised.csv", row.names = 1))
 
 ### read in trees
-trees <- ape::read.tree("~/Documents/liliales_paper/data/phylogeny/combined_subsampled_dated.tre")
+trees <- ape::read.tree("data/phylogeny/combined_subsampled_dated.tre")
 
 #### start PARAMO
 library(SCATE.shortcourse)
@@ -13,14 +13,16 @@ library(corHMM)
 
 ### loop over each tree
 
-# save character reconstructions to list 
+# save Q matrices and character reconstructions to list 
+Qmats <- vector("list", length = length(1:(length(trees)/2)))
+names(Qmats) <- paste0("tree_", 1:(length(trees)/2))
 IND.maps <- vector("list", length = length(1:(length(trees)/2)))
 names(IND.maps) <- paste0("tree_", 1:(length(trees)/2))
 EntPhen.maps <-  vector("list", length = length(1:(length(trees)/2)))
 names(EntPhen.maps) <- paste0("tree_", 1:(length(trees)/2))
 
 # set number of simulations
-N = 100
+N = 1000
 
 for (i in 1:(length(trees)/2)) {
   print(paste0("working on tree ", i))
@@ -49,6 +51,12 @@ for (i in 1:(length(trees)/2)) {
   # must use corHMM version 1.22
   corhmm.fits <- amalgamated_fits_corHMM(td.comb, 
                                          amal.deps)
+  # save Q matrix for simulating later
+  Qmats[[i]] <- vector("list", length = length(corhmm.fits))
+  names(Qmats[[i]]) <- names(corhmm.fits)
+  Qmats[[i]][[1]] <- corhmm.fits[[1]]$solution
+  Qmats[[i]][[2]] <- corhmm.fits[[2]]$solution
+  Qmats[[i]][[3]] <- corhmm.fits[[3]]$solution
   
   # Create stochastic character maps per character
   sim_trees <- amalgamated_simmaps_phytools(corhmm.fits, nsim = N) # do 1000 for real version
@@ -73,8 +81,9 @@ for (i in 1:(length(trees)/2)) {
   
 }
 
-save(IND.maps, file = "~/Documents/liliales_paper/paramo/INDmaps1.RData")
-save(EntPhen.maps, file = "~/Documents/liliales_paper/paramo/EntPhenmaps1.RData")
+save(Qmats, file = "paramo/Qmats1.RData")
+save(IND.maps, file = "paramo/INDmaps1.RData")
+save(EntPhen.maps, file = "paramo/EntPhenmaps1.RData")
 
 
 
