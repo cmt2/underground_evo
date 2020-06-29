@@ -60,7 +60,7 @@ plot_simmap = function(time_tree, tree, data, simmaps, states, colors, nt=1001, 
     xx = node.depth.edgelength(time_tree)
 
     # plot the tree
-    pp = plot.phylo(time_tree, type = "fan",
+    pp = plot.phylo(time_tree, type = "phylogram",
                     use.edge.length = TRUE,
                     show.tip.label  = show.tip.label,
                     edge.width      = edge.width,
