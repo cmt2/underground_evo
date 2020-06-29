@@ -10,7 +10,7 @@ t <- ape::read.tree("data/phylogeny/combined_subsampled_dated.tre")[[i]]
 clim <- read.csv("data/climate_estimation/max_wc_all.csv", row.names = 1)
 precip <- as.numeric(log(clim[,"bio15"]))
 names(precip) <- row.names(clim)
-precip[precip == -Inf] <- 0
+precip[precip == -Inf] <- 0 # drop species
 temp <- as.numeric(log(clim[,"bio4"]))
 names(temp) <- row.names(clim)
 
@@ -19,17 +19,24 @@ names(temp) <- row.names(clim)
   
 # pick and edit tree
 #t <- trees[[i]]
-t <- reorder(t, "postorder")
+t <- ape::reorder.phylo(t, "postorder")
 #change Rhipogonum to Ripogonum in tree 
 t$tip.label <- gsub("Rhipogonum", "Ripogonum", t$tip.label)
 
 #### precip
 # set priors for precip
+#priorOU_precip <- make.prior(t, 
+#                             dists=list(dalpha="dhalfcauchy", dsig2="dhalfcauchy", 
+#                                        dk="cdpois", dtheta="dnorm"),
+#                             param=list(dalpha=list(scale=0.1), dsig2=list(scale=0.1),
+#                                        dk=list(lambda=10, kmax=50), dsb=list(bmax=1, prob=1), 
+#                                        dtheta=list(mean=mean(precip), sd=1.5*sd(precip))),
+#                             plot.prior = FALSE)
 priorOU_precip <- make.prior(t, 
                              dists=list(dalpha="dhalfcauchy", dsig2="dhalfcauchy", 
-                                        dk="cdpois", dtheta="dnorm"),
+                                        dk="dgeom", dtheta="dnorm"),
                              param=list(dalpha=list(scale=0.1), dsig2=list(scale=0.1),
-                                        dk=list(lambda=10, kmax=50), dsb=list(bmax=1, prob=1), 
+                                        dk=list(prob = 1/30), dsb=list(bmax=1, prob=1), 
                                         dtheta=list(mean=mean(precip), sd=1.5*sd(precip))),
                              plot.prior = FALSE)
 startpars_precip <- priorSim(priorOU_precip, t, plot=FALSE)$pars[[1]]
@@ -46,12 +53,12 @@ mcmcOU_precip <- bayou.makeMCMC(t,
                                 outname = outname_precip, 
                                 plot.freq = NULL)
 
-#mcmcOU_precip$run(5000000)
-mcmcOU_precip$run(5000)
+mcmcOU_precip$run(5000000)
+#mcmcOU_precip$run(5000)
 
 chainOU_precip <- mcmcOU_precip$load()
 chainOU_precip <- set.burnin(chainOU_precip, 0.3)
-#summary(chainOU_precip)
+summary(chainOU_precip)
 
 # save output 
 filename <- paste0("bayou/output/bayou_precip_", i, ".RData")
@@ -59,13 +66,20 @@ save(chainOU_precip, file = filename)
 
 #### temp
 # set priors for temp
+#priorOU_temp <- make.prior(t, 
+#                             dists=list(dalpha="dhalfcauchy", dsig2="dhalfcauchy", 
+#                                        dk="cdpois", dtheta="dnorm"),
+#                             param=list(dalpha=list(scale=0.1), dsig2=list(scale=0.1),
+#                                        dk=list(lambda=10, kmax=50), dsb=list(bmax=1, prob=1), 
+#                                        dtheta=list(mean=mean(temp), sd=1.5*sd(temp))),
+#                           plot.prior = FALSE)
 priorOU_temp <- make.prior(t, 
                              dists=list(dalpha="dhalfcauchy", dsig2="dhalfcauchy", 
-                                        dk="cdpois", dtheta="dnorm"),
+                                        dk="dgeom", dtheta="dnorm"),
                              param=list(dalpha=list(scale=0.1), dsig2=list(scale=0.1),
-                                        dk=list(lambda=10, kmax=50), dsb=list(bmax=1, prob=1), 
+                                        dk=list(prob = 1/30), dsb=list(bmax=1, prob=1), 
                                         dtheta=list(mean=mean(temp), sd=1.5*sd(temp))),
-                           plot.prior = FALSE)
+                             plot.prior = FALSE)
 startpars_temp <- priorSim(priorOU_temp, t, plot=FALSE)$pars[[1]]
 priorOU_temp(startpars_temp)
 set.seed(1)
@@ -81,7 +95,7 @@ mcmcOU_temp <- bayou.makeMCMC(t,
                                 plot.freq = NULL)
 
 #mcmcOU_temp$run(5000000)
-mcmcOU_temp$run(5000)
+mcmcOU_temp$run(50000)
 
 chainOU_temp <- mcmcOU_temp$load()
 chainOU_temp <- set.burnin(chainOU_temp, 0.3)
@@ -94,9 +108,12 @@ save(chainOU_temp, file = filename)
 #plot(chainOU, auto.layout=FALSE)
 #
 #par(mfrow=c(2,2))
-#pdf("~/Desktop/bayoutest.pdf", height = 20, width = 15)
-#plotSimmap.mcmc(chainOU, burnin = 0.3, pp.cutoff = 0.3, cex = .5)
+pdf("~/Desktop/bayou_temp.pdf", height = 20, width = 15)
+plotSimmap.mcmc(chainOU_temp, burnin = 0.3, edge.type = "theta", pp.cutoff = 0.3, cex = .5)
+dev.off()
+#pdf("~/Desktop/bayou_temp.pdf", height = 20, width = 15)
+#plotSimmap.mcmc(chainOU_temp, burnin = 0.3, pp.cutoff = 0.3, cex = .5)
 #dev.off()
-#plotBranchHeatMap(tree, chainOU, "theta", burnin = 0.3, pal = cm.colors)
+#plotBranchHeatMap(t, chainOU_precip, "theta", burnin = 0.3, pal = cm.colors)
 #phenogram.density(tree, dat, burnin = 0.3, chainOU, pp.cutoff = 0.3)
-
+#
