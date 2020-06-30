@@ -14,16 +14,16 @@ library(SCATE.shortcourse)
 library(corHMM)
 
 # set number of simulations
-N = 100
-#N = 1000
+#N = 100
+N = 1000
 
 #combine tree and traits 
 td <- make.treedata(t, morph_paramo)
 
 # visualize dependency structure
-G1 <- igraph::graph_from_adjacency_matrix(remove_indirect(t(as.matrix(dep_mat))))
-con.comp <- igraph::components(G1, "weak") # Organizes the subgraphs within our graph and allows us to pick out connected pieces
-plot(G1, vertex.size=1, edge.arrow.size=0.5, vertex.label.cex=0.75)
+#G1 <- igraph::graph_from_adjacency_matrix(remove_indirect(t(as.matrix(dep_mat))))
+#con.comp <- igraph::components(G1, "weak") # Organizes the subgraphs within our graph and allows us to pick out connected pieces
+#plot(G1, vertex.size=1, edge.arrow.size=0.5, vertex.label.cex=0.75)
 
 # amalgate based on dependencies
 amal.deps <- amalgamate_deps(dep_mat)
