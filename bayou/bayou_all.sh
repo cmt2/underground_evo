@@ -6,6 +6,10 @@
 #SBATCH --mail-type=ALL
 #SBATCH --time=72:00:00
 
+cd /global/scratch/cmt2/underground_evo
+
+module load r/3.6.3
+
 Rscript bayou/run_bayou.R --i 1 --clim_var "bio15" --run_num 1 --ngen 10000000 &
 Rscript bayou/run_bayou.R --i 1 --clim_var "bio15" --run_num 2 --ngen 10000000 &
 Rscript bayou/run_bayou.R --i 1 --clim_var "bio4" --run_num 1 --ngen 10000000 &
