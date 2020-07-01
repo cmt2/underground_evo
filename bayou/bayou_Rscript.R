@@ -1,5 +1,7 @@
 # execute bayou fun with scriptR
 
+# direct to library for packages
+.libPaths(new = "/global/home/users/cmt2/R/x86_64-pc-linux-gnu-library/3.6")
 # get the arguments
 args <- commandArgs(trailingOnly = TRUE)
 #args = c("--i", 1, "--clim_var", "bio4", "--run_num", 2, "--ngen", "5000")
