@@ -4,7 +4,7 @@
 #SBATCH --qos=savio_normal
 #SBATCH --mail-user=cmt2@berkeley.edu
 #SBATCH --mail-type=ALL
-#SBATCH --time=00:30:00
+#SBATCH --time=72:00:00
 
 cd /global/scratch/cmt2/underground_evo
 echo loading modules
