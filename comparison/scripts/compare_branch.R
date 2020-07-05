@@ -5,17 +5,38 @@
 # findInterval 
 # cumsum(history)
 
-paramo_map <- EP.maps[[500]]
-bayou_map <- test[[1]]
+### source scripts
+source("comparison/scripts/subset_chainOU.R")
+source("comparison/scripts/reduce_to_unique_states.R")
+### load in example data
+
+# bayou
+load("C:/Users/Ethan/Desktop/underground_evo/bayou/output/bayou_temp_1.RData")
+bayou <- subset_chainOU(chainOU = chainOU_temp, nsamples = 100)
+bayou_map <- bayou[[1]]
+rm(chainOU_temp, bayou)
+
+# paramo
+load("C:/Users/Ethan/Desktop/underground_evo/paramo/output/EP_test.RData")
+paramo_map <- ape::reorder.phylo(EP.maps[[10]], "postorder")
+load("C:/Users/Ethan/Desktop/underground_evo/paramo/output/Qmats_test.RData")
 paramo_models <- Qmats
+rm(EP.maps, Qmats)
 
-
+# total number of parameter states 
 num_param_states = dim(paramo_models[[1]])[1] * dim(paramo_models[[2]])[1] * dim(paramo_models[[3]])[1]
+
+# set up vectors 
 cum_theta_per_state = numeric(num_param_states)
 cum_state_time      = numeric(num_param_states)
+
 # compute the change times for each history
-paramo_times = cumsum(paramo_history)
-bayou_times  = cumsum(bayou_history)
+branch = 927
+p_map <- unique(data.frame(name = names(paramo_map$maps[[branch]]),
+                           length = paramo_map$maps[[branch]]))
+
+paramo_times = cumsum(reduce_to_unique_states())
+bayou_times  = cumsum(bayou_map$tree$maps[[branch]])
 # compute the combined change times
 combined_times = sort(unique(c(paramo_times, bayou_times)))
 num_times      = length(combined_times)
