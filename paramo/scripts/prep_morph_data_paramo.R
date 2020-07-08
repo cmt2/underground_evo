@@ -1,7 +1,7 @@
 ### prepare morphology data in correct format 
 
 # read in data in old format, but with edited root data
-morph <- read.csv(file = "~/Documents/liliales_paper/data/morphology/morphology_matrix_new.csv")
+morph <- read.csv(file = "data/morphology/morphology_matrix_new.csv")
 
 # remove NAs
 morph <- morph[!is.na(morph$scheme_3_root),]
@@ -29,13 +29,13 @@ for (i in 1:nrow(morph_new)) {
   
   # corm is true if corm 
   if (morph$scheme_3_stem[i] == "corm") {
-    morph_new$corm <- 1
-  } else {morph_new$corm <- 0}
+    morph_new$corm[i] <- 1
+  } else {morph_new$corm[i] <- 0}
   
   # rhizome is true if rhizome 
   if (morph$scheme_3_stem[i] == "rhizome") {
-    morph_new$rhizome <- 1
-  } else {morph_new$rhizome <- 0}
+    morph_new$rhizome[i] <- 1
+  } else {morph_new$rhizome[i] <- 0}
   
   # leaf under is true if bulb 
   # conversely stem not under true if bulb
@@ -46,7 +46,7 @@ for (i in 1:nrow(morph_new)) {
   } else {morph_new$bulb[i] <- 0; morph_new$leaf_under[i] <- 0}
   
   # root tuber true if not normal_rt
-  if (morph$scheme_3_root[i] == "rt_tuber_cont" | morph$scheme_3_root[i] == "rt_tuber_cont") {
+  if (morph$scheme_3_root[i] == "rt_tuber_cont" | morph$scheme_3_root[i] == "rt_tuber_disc") {
     morph_new$root_tuber[i] <- 1
   } else { morph_new$root_tuber[i] <- 0}
   
@@ -66,4 +66,4 @@ morph_new$species <- gsub(" ", "_", x = morph_new$species)
 # remove extra columns 
 morph_new[,c("genus","habit")] <- NULL
 
-write.csv(morph_new, file = "../data/morphology/morph_paramo.csv", row.names = FALSE)
+write.csv(morph_new, file = "data/morphology/morph_paramo.csv", row.names = FALSE)
