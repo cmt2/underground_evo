@@ -15,8 +15,10 @@ compare_samples <- function(bayou, paramo) {
   pb$tick(0)
   
   for (i in 1:1000) {
+    #results[[i]] <- compute_ave_theta_per_state(bayou_map = bayou[[i]],
+    #                                             paramo_map = phytools::reorderSimmap(paramo[[i]], "postorder"))
     results[[i]] <- compute_ave_theta_per_state(bayou_map = bayou[[i]],
-                                                 paramo_map = phytools::reorderSimmap(paramo[[i]], "postorder"))
+                                                paramo_map = paramo[[i]])
     pb$tick()
   }
  return(results) 

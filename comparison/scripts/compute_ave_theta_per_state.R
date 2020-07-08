@@ -10,6 +10,16 @@ library(bayou)
 ### load in data
 
 compute_ave_theta_per_state <- function(bayou_map, paramo_map) {
+  #recover()
+  # for some climate variables, tips with var = 0 were dropped prior to bayou analysis
+  # drop the corresponding tips in the paramo tree for comparison 
+  if (length(bayou_map$tree$tip.label) != length(paramo_map$tip.label)) {
+    tip_to_drop <- paramo_map$tip.label[!paramo_map$tip.label %in% bayou_map$tree$tip.label]
+    paramo_map <- phytools::drop.tip.simmap(paramo_map, tip = tip_to_drop)
+    paramo_map <- phytools::reorderSimmap(paramo_map, order = "postorder")
+  } else {
+    paramo_map <- phytools::reorderSimmap(paramo_map, order = "postorder")
+  }
   if(any((bayou_map$tree$edge == paramo_map$edge) == FALSE) == TRUE) {stop("edges don't match")}
   # total number of parameter states 
   param_states <- unique(names(unlist(paramo_map$maps)))
@@ -20,11 +30,18 @@ compute_ave_theta_per_state <- function(bayou_map, paramo_map) {
   cum_state_time <- numeric(num_param_states)
   names(cum_state_time) <- param_states
   for (branch in 1:length(paramo_map$edge.length)) {
-    paramo_times <- round(cumsum(reduce_to_unique_states(paramo_map$maps[[branch]])), digits = 10)
-    bayou_times  <- round(cumsum(bayou_map$tree$maps[[branch]]), digits = 10)
+    
+    paramo_times <- sort(cumsum(reduce_to_unique_states(paramo_map$maps[[branch]])))
+    bayou_times  <- sort(cumsum(bayou_map$tree$maps[[branch]]))
+    
+    # change last paramo time and bayou time to be branch length 
+    paramo_times[length(paramo_times)] <- bayou_map$tree$edge.length[[branch]]
+    bayou_times[length(bayou_times)] <- bayou_map$tree$edge.length[[branch]]
+
     # compute the combined change times
     combined_times <- sort(unique(c(paramo_times, bayou_times)))
     num_times      <- length(combined_times)
+    
     # loop over the combined history
     previous_time <- 0
     for(i in 1:num_times) {
@@ -51,6 +68,7 @@ compute_ave_theta_per_state <- function(bayou_map, paramo_map) {
     }
     # compute the average theta
     average_theta_per_state <- cum_theta_per_state / cum_state_time
+    #if (any(is.na(names(average_theta_per_state)) == TRUE)) {stop(branch)}
   }
   return(average_theta_per_state)
 }
