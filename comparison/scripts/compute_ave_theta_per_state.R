@@ -3,14 +3,12 @@
 # the maps should be in a same order and be on the same tree 
 
 ### source scripts
-source("comparison/scripts/subset_chainOU.R")
 source("comparison/scripts/reduce_to_unique_states.R")
 library(bayou)
 
 ### load in data
 
 compute_ave_theta_per_state <- function(bayou_map, paramo_map) {
-  #recover()
   # for some climate variables, tips with var = 0 were dropped prior to bayou analysis
   # drop the corresponding tips in the paramo tree for comparison 
   if (length(bayou_map$tree$tip.label) != length(paramo_map$tip.label)) {
@@ -66,10 +64,57 @@ compute_ave_theta_per_state <- function(bayou_map, paramo_map) {
       # increment the previous time
       previous_time <- this_time
     }
-    # compute the average theta
-    average_theta_per_state <- cum_theta_per_state / cum_state_time
-    #if (any(is.na(names(average_theta_per_state)) == TRUE)) {stop(branch)}
   }
+  # combine/ collapse states (add cum_theta and add cum_state_time) before averaging 
+  recodes <- data.frame(matrix(unlist(strsplit(names(cum_theta_per_state), split = "")), ncol = 3, byrow = TRUE))
+  colnames(recodes) <- c("l","s","r")
+  recodes$original <- names(cum_theta_per_state)
+  recodes$theta <- cum_theta_per_state
+  recodes$time <-  cum_state_time
+  
+  #recode first digit:
+  # 2 -> 0 
+  # 3 -> 1 
+  recodes$l[which(recodes$l == "2")] <- "0"
+  recodes$l[which(recodes$l == "3")] <- "1"
+  #recode second digit:
+  # 4 -> 0
+  # 5 -> 1
+  # 6 -> 2
+  # 7 -> 3
+  recodes$s[which(recodes$s == "4")] <- "0"
+  recodes$s[which(recodes$s == "5")] <- "1"
+  recodes$s[which(recodes$s == "6")] <- "2"
+  recodes$s[which(recodes$s == "7")] <- "3"
+  #recode third digit:
+  # 4 -> 0
+  # 5 -> 1
+  # 6 -> 2
+  # 7 -> 3
+  recodes$r[which(recodes$r == "4")] <- "0"
+  recodes$r[which(recodes$r == "5")] <- "1"
+  recodes$r[which(recodes$r == "6")] <- "2"
+  recodes$r[which(recodes$r == "7")] <- "3"
+  
+  # new state names:
+  recodes$new <- paste0(recodes$l, recodes$s, recodes$r, collapste = "")
+
+  # create new output vectors
+  unique_new_states <- unique(recodes$new)
+  new_theta <- vector("numeric", length = length(unique_new_states))
+  new_time <- vector("numeric", length = length(unique_new_states))
+  names(new_theta) <- names(new_time) <- unique_new_states
+  
+  # collapse states 
+  for (code in unique_new_states) {
+    thetas_for_code <- recodes$theta[which(recodes$new == code)]
+    times_for_code <- recodes$time[which(recodes$new == code)]
+    new_theta[code] <- sum(thetas_for_code)
+    new_time[code] <- sum(times_for_code)
+  }
+  # compute the average theta
+  average_theta_per_state <- new_theta/ new_time
+  #average_theta_per_state <- cum_theta_per_state / cum_state_time
   return(average_theta_per_state)
 }
 

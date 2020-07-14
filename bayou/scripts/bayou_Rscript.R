@@ -15,7 +15,7 @@ print(paste0("args: ", args))
 .ngen <- args[which(args == "--ngen") + 1]
 
 # load libraries and source function
-source("bayou/run_bayou.R")
+source("bayou/scripts/run_bayou.R")
 print("sourced run_bayou.R")
 library(bayou)
 print("libraries loaded")

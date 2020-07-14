@@ -1,5 +1,6 @@
 setwd("/Users/carrietribble/Documents/underground_evo/")
 source("comparison/scripts/compare_samples.R")
+source("comparison/scripts/subset_chainOU.R")
 library(bayou)
 library(ggplot2)
 library(ggthemes)
@@ -20,11 +21,20 @@ for (analysis in unique_analyses) {
   b <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
   rm(chainOU)
   tree <- unlist(strsplit(analysis, split = "_"))[3]
-  load(paste0("~/Documents/underground_evo/paramo/output/paramo_results", tree, ".RData"))
-  p <- results$EP.maps
+  load(paste0("~/Documents/underground_evo/paramo/simulations/sim_tree_", tree, ".RData"))
+  sim <- results[[3]]
   rm(results)
   
-  c <- compare_samples(bayou = b, paramo = p)
+  # change state labels for simulations where one character was inferred as constant
+  
+  # in tree 1, simulation #146 is constant for character 3 in state 4
+  if (tree == 1) {
+    for (branch in 1:length(sim[[146]]$maps)) {
+      names(sim[[146]]$maps[[branch]]) <- paste0(names(sim[[146]]$maps[[branch]]), "4")
+    }
+  }
+  
+  c <- compare_samples(bayou = b, paramo = sim)
 
   # make data frame 
   columns <- vector()
