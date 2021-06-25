@@ -10,7 +10,7 @@ cd /global/scratch/cmt2/underground_evo
 echo loading modules
 module load r/3.6.3
 module load r-packages/default
-module load r-spatial/2018-12-05-r35
+module load r-spatial/2020-11-30-r36
 module load imagemagick/7.0.8-29
 echo finished loading modules
 echo starting r runs
