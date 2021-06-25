@@ -34,7 +34,7 @@ run_bayou <- function(i, clim_var, run_num, ngen) {
   
   startpars <- priorSim(priorOU, t, plot=FALSE)$pars[[1]]
   priorOU(startpars)
-  set.seed(1)
+  #set.seed(1)
   
   # Set up the MCMC
   outname <- paste0("modelOU_", clim_var,"_tree_", i, "_r00", run_num)
