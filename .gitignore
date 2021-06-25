@@ -14,3 +14,7 @@ comparison/wrong_data/
 paramo/figures/
 paramo/output/
 paramo/simulations/
+bayou/output/bayou_temp_1.RData
+comparison/character_results/
+comparison/combined_results/
+comparison/metric_results.csv
