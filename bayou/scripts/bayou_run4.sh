@@ -14,14 +14,14 @@ module load r-spatial/2018-12-05-r35
 module load imagemagick/7.0.8-29
 echo finished loading modules
 echo starting r runs
-Rscript bayou/scripts/bayou_Rscript.R --i 1 --clim_var bio15 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 1 --clim_var bio4 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 2 --clim_var bio15 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 2 --clim_var bio4 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 3 --clim_var bio15 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 3 --clim_var bio4 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 4 --clim_var bio15 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 4 --clim_var bio4 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 5 --clim_var bio15 --run_num 4 --ngen 5000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 5 --clim_var bio4 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 6  --clim_var bio15 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 6  --clim_var bio4 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 7  --clim_var bio15 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 7  --clim_var bio4 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 8  --clim_var bio15 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 8  --clim_var bio4 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 9  --clim_var bio15 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 9  --clim_var bio4 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 10 --clim_var bio15 --run_num 4 --ngen 5000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 10 --clim_var bio4 --run_num 4 --ngen 5000000 &
 wait; 
