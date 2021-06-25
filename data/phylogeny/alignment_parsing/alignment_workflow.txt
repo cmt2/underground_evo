@@ -1,0 +1,490 @@
+# Alignment curation workflow 
+
+1) Ensure all alignments are a single homologous gene region 
+
+ a) for all alignments - look for the annotation with the most representation and 
+ 	subset for only sequences with that annotation. Save those seqs as 1. fasta 
+ 	and save other seqs as 1_other (for example).   
+ 	
+ 	1 = ITS 
+ 	2 = ITS
+ 	3 = atpB
+ 	4 = atpB-rbcL SPACER ONLY  
+ 	5 = atpF and atpH
+ 	6 = cob
+ 	7 = matK
+ 	8 = matR
+ 	9 = nad5
+ 	10 = nadhF
+ 	11 = rbcL
+ 	12 = rpl16 gene and intron
+ 	13 = rpl32 and rpl32-trnL
+ 	14 = rps16
+ 	15 = psbA and pbsA-trnH
+ 	16 = trnK
+ 	17 = trnL, spacer, trnF 
+ 	18 = deleted 
+ 	19 = trnY 
+ 	
+ 	subset_all_regions.py
+ 
+ b) check that nrows(align_new/1.fasta) + nrows(align_new/1_other.fasta) = nrows(align_orig/1.fasta)
+ 	for all regions 
+ 	
+ 	check_file_lengths.py
+ 
+ c) delete zero length files 
+ 
+ 	delete_empty_files.py
+ 	
+ c) combine unique elements of regions that are the same gene 
+ 	1.fasta and 2.fasta
+ 	
+ 	bash: 
+ 	
+ 	cat /Users/carrietribble/Desktop/align_new/1.fasta /Users/carrietribble/Desktop/align_new/2.fasta >> Users/carrietribble/Desktop/align_new/combined_its.fasta
+
+	get_unique_seqs
+
+	bash:
+	rm Users/carrietribble/Desktop/align_new/combined_its.fasta
+	
+ d) search through "other" fasta files for each search term and pull out sequences 
+ 
+ 	subset_other_fasta.py
+ 	
+ 	and delete empty files: 
+ 	delete_empty_files.py
+ 	
+ 	and 
+  	
+ e) add the region other files to the primary alignments and move into new directory for final alignments:
+ 
+ 	mkdir final_alignments
+ 	
+ 	cat /Users/carrietribble/Desktop/align_new/9.fasta /Users/carrietribble/Desktop/align_new/nad5_other.fasta >> Users/carrietribble/Desktop/align_new/final_alignments/combined_nad5.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/15.fasta /Users/carrietribble/Desktop/align_new/psbA_other.fasta >> Users/carrietribble/Desktop/align_new/final_alignments/combined_psbA.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/14.fasta /Users/carrietribble/Desktop/align_new/rps16_other.fasta >> Users/carrietribble/Desktop/align_new/final_alignments/combined_rps16.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/16.fasta /Users/carrietribble/Desktop/align_new/trnk_other.fasta >> Users/carrietribble/Desktop/align_new/final_alignments/combined_trnk.fasta
+
+ 	mv /Users/carrietribble/Desktop/align_new/unique_combined_its.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/3.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/4.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/5.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/6.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/7.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/8.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/10.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/11.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/12.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/13.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/17.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	mv /Users/carrietribble/Desktop/align_new/19.fasta /Users/carrietribble/Desktop/align_new/final_alignments
+ 	
+ f) remove duplicates in combined files 
+ 
+ 	get_unique_seqs_all.py 
+ 	
+ 	rm unique_unique_combined_its.fasta combined_nad5.fasta combined_psbA.fasta combined_rps16.fasta combined_trnk.fasta
+ 
+ g) rename to region 
+ 
+ 	mv 3.fasta atpB.fasta
+	mv 4.fasta atpB-rbcL.fasta
+	mv 5.fasta atpF_atpH.fasta
+	mv 6.fasta cob.fasta
+	mv 7.fasta matK.fasta
+	mv 8.fasta matR.fasta
+	mv 10.fasta nadhF.fasta
+	mv 11.fasta rbcL.fasta
+	mv 12.fasta rpl16.fasta
+	mv 13.fasta rpl32_rpl32-trnL.fasta
+	mv 17.fasta trnL_trnF.fasta
+	mv 19.fasta trnY.fasta
+ 	
+ h) realign everything with mafft 	
+ 	
+ 	mkdir aligned 
+ 	
+ 	mafft --auto atpB-rbcL.fasta > aligned/atpB-rbcL.fasta
+ 	mafft --auto atpB.fasta > aligned/atpB.fasta
+ 	mafft --auto atpF_atpH.fasta > aligned/atpF_atpH.fasta
+ 	mafft --auto cob.fasta > aligned/cob.fasta
+ 	mafft --auto matK.fasta > aligned/matK.fasta
+ 	mafft --auto matR.fasta > aligned/matR.fasta
+ 	mafft --auto nadhF.fasta > aligned/nadhF.fasta
+ 	mafft --auto rbcL.fasta > aligned/rbcL.fasta
+ 	mafft --auto rpl16.fasta > aligned/rpl16.fasta
+ 	mafft --auto rpl32_rpl32-trnL.fasta > aligned/rpl32_rpl32-trnL.fasta
+ 	mafft --auto trnL_trnF.fasta > aligned/trnL_trnF.fasta
+ 	mafft --auto trnY.fasta > aligned/trnY.fasta
+ 	mafft --auto unique_combined_its.fasta > aligned/unique_combined_its.fasta
+ 	mafft --auto unique_combined_psbA.fasta > aligned/unique_combined_psbA.fasta
+ 	mafft --auto unique_combined_rps16.fasta > aligned/unique_combined_rps16.fasta
+ 	
+ i) evaluate by eye 
+ 	
+ 	atpB-rbcL.fasta Looks good!! 
+	atpB.fasta Looks good!!
+	atpF_atpH.fasta realign with pasta
+	cob.fasta Looks good! 
+	matK.fasta Looks good! 
+	matR.fasta Looks good! 
+	nadhF.fasta Looks good!
+	rbcL.fasta Looks good!
+	rpl16.fasta realign with pasta
+	rpl32_rpl32-trnL.fasta Looks good!
+	trnL_trnF.fasta Realign with pasta
+	trnY.fasta Looks good!
+	unique_combined_its.fasta realign with pasta
+	unique_combined_psbA.fasta > reverse complement align (mafft --auto --adjustdirection)  > remove duplicates (get_unique_seqs.py) > realign (mafft --auto) > unique_combined_psba_new_aligned.fasta (remove intermediate files) should align with pasta
+	unique_combined_rps16.fasta looks good
+	
+ 	
+  	Sidenote: 
+ 	
+ 	unique_combined_nad5_aln.fasta contains matK sequences - those are moved to 7.fasta and the nad5_aln.fasta is discarded (too few sequences)
+ 	unique_combined_trnK_aln.fasta realign with pasta contains mismatched sequences that blast to matK - those are moved to 7.fasta and the trnk_aln.fasta is discarded (too few sequences)
+	
+ 	
+ j) realign selected alignments with Pasta
+ 
+ 	mkdir pasta_aligned_atpF_atpH
+ 	cp atpF_atpH.fasta pasta_aligned_atpF_atpH
+ 	cd pasta_aligned_atpF_atpH
+ 	run_pasta.py -i atpF_atpH.fasta --iter-limit 5
+ 	
+ 	cd ..
+ 	
+ 	mkdir pasta_aligned_rpl16
+ 	cp rpl16.fasta pasta_aligned_rpl16
+ 	cd pasta_aligned_rpl16
+ 	run_pasta.py -i rpl16.fasta --iter-limit 5
+ 	
+ 	cd ..
+ 	
+  	mkdir pasta_aligned_trnL_trnF
+ 	cp trnL_trnF.fasta pasta_aligned_trnL_trnF
+ 	cd pasta_aligned_trnL_trnF
+ 	run_pasta.py -i trnL_trnF.fasta --iter-limit 5	
+
+	cd ..
+
+  	mkdir pasta_aligned_its
+ 	cp unique_combined_its.fasta pasta_aligned_its
+ 	cd pasta_aligned_its
+ 	run_pasta.py -i unique_combined_its.fasta --iter-limit 5
+ 	
+ 	cd .. 
+ 	
+  	mkdir pasta_aligned_psba
+ 	cp unique_combined_psba_new_aligned.fasta pasta_aligned_psba
+ 	cd pasta_aligned_psba
+ 	run_pasta.py -i unique_combined_psba_new_aligned.fasta --iter-limit 5
+ 	
+k) move finalized alignments docs to new directory 
+ 
+	cd /Users/carrietribble/Documents/liliales_paper_big_files/phylogeny/align_new/final_alignments/aligned 	
+	mkdir chosen_alignments
+ 	
+ 	cp atpB-rbcL.fasta chosen_alignments
+ 	cp atpB.fasta chosen_alignments
+ 	cp pasta_aligned_atpF_atpH/pastajob.marker001.atpF_atpH.aln chosen_alignments
+ 	cp cob.fasta chosen_alignments
+ 	cp matK.fasta chosen_alignments
+ 	cp matR.fasta chosen_alignments
+ 	cp nadhF.fasta chosen_alignments
+ 	cp pasta_aligned_its/pastajob.marker001.unique_combined_its.aln chosen_alignments
+ 	cp pasta_aligned_psba/pastajob.marker001.unique_combined_psba_new_aligned.aln chosen_alignments
+ 	cp pasta_aligned_rpl16/pastajob.marker001.rpl16.aln chosen_alignments
+ 	cp pasta_aligned_trnL_trnF/pastajob.marker001.trnL_trnF.aln chosen_alignments
+ 	cp rbcL.fasta chosen_alignments
+ 	cp rpl32_rpl32-trnL.fasta chosen_alignments
+ 	cp trnY.fasta chosen_alignments
+ 	cp unique_combined_rps16.fasta chosen_alignments
+ 	
+	cd chosen_alignments
+
+
+ l) rename all sequences as Genus species to allow for concatenation 
+ 
+  [Sequence S72305.1 manually renamed so Genus species follows the genbank accession number for easier downstream processing]
+  
+ 	rename_as_taxon_name.py
+ 
+ m) remove duplicate taxa in each region
+ 
+ If any particular taxon is duplicated, take the first one 
+ Remove all unidentified taxa
+ 
+ remove_dup_taxa.py
+
+ n) make combined list of all taxa and add all taxa (even if blank) to all alignments
+	
+	make new directory and copy chosen files there
+	[Drop 5 of the alignments because they contain less than 150 OTUs, see R script for details]
+	
+	mkdir contain_all_otus
+	cp *.fasta contain_all_otus
+	cp *.aln contain_all_otus
+	cd contain_all_otus
+	rm cob.fasta matR.fasta pastajob.marker001.atpF_atpH.aln rpl32_rpl32-trnL.fasta trnY.fasta
+
+	modify each file to contain all the OTUS: add_all_taxa.py
+
+ o) Finalize alignments 
+ 	
+ 	change space to underscore in species names, order alphabetically, & convert to nexus: 
+ 	finalize_alignment_format.py
+ 	
+ p) Remove problem taxa 
+ 	
+ 	These taxa were identified as problematic from a previous Likelihood phylogeny (really long branches, etc.) 
+ 	Tricyrtis_amethystina, Gagea_spathacea
+ 	remove_problem_taxa.py 
+ 	mkdir final_nexus_files
+ 	mv mod* final_nexus_files/
+ 	cd final_nexus_files/
+ 	
+ 	mv mod_atpB-rbcL.nexus atpB-rbcL.nexus
+	mv mod_atpB.nexus  atpB.nexus
+	mv mod_matK.nexus  matK.nexus
+	mv mod_nadhF.nexus  nadhF.nexus
+	mv mod_rbcL.nexus  rbcL.nexus
+	mv mod_rpl16.nexus  rpl16.nexus
+	mv mod_trnL_trnF.nexus  trnL_trnF.nexus
+	mv mod_unique_combined_its.nexus  unique_combined_its.nexus
+	mv mod_unique_combined_psba_new_aligned.nexus  unique_combined_psba_new_aligned.nexus
+	mv mod_unique_combined_rps16.nexus unique_combined_rps16.nexus
+
+o) trim OTUs and columns 
+
+	remove OTUs that aren't also in niche modeling and morphology datasets
+	
+	trim columns that have > 95% missing data 
+	
+
+
+
+
+
+
+ 
+Previous steps:
+
+
+
+	
+ g) add in outgroups
+ 
+ 	Outgroups were found by blasting one sequence per region to each of 18 outgroup taxa, chosen 
+ 	to represent the major clades sister to Liliales (Poales, Zingiberales, Commelinales, Arecales, Asparagales). 
+ 	Sequences were selected either by blasting to a specific accession, identified from annotated chloroplast genomes 
+ 	(and verified by blast), or trimmed from alignment of sequences to an entire chloroplast region (for spacer regions).
+ 	
+ 	These outgroups were aligned to each other w/ Mafft pairwise alignments (for each region to verify region homology) 
+ 	and removed if non-homologous. We took the reverse complement of some sequences. Accession numbers are available for
+ 	all outgroup sequences. 
+ 	
+ 	Then, each outgroup region text file was merged with the full region fasta file:
+ 
+  	cat /Users/carrietribble/Desktop/align_new/final_alignments/unique_combined_its.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/ITS.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/ITS.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/3.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/atpB.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/atpB.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/4.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/atpB_rbcL_spacer.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/atpB_rbcL_spacer.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/5.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/atpF_atpH.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/atpF_atpH.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/6.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/cob.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/cob.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/7.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/matK.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/matK.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/8.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/matR.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/matR.fasta
+ 	# 9.fasta discarded because of too few sequences moving forward (contains matK sequences - those are moved to 7.fasta and the nad5_aln.fasta is discarded) 
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/10.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/ndhF.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/ndhF.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/11.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/rbcL.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/rbcL.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/12.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/rpl16.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/rpl16.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/13.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/rpl32_trnL.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/rpl32_trnL.fasta
+ 	cat /Users/carrietribble/Desktop/align_new/final_alignments/unique_combined_rps16.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/rsp16.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/rsp16.fasta
+  	cat /Users/carrietribble/Desktop/align_new/final_alignments/unique_combined_psbA.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/psbA.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/psbA.fasta
+	# 16.fasta discarded because of too few sequences moving forward (contains mismatched sequences that blast to matK - those are moved to 7.fasta and the trnk_aln.fasta is discarded) 
+  	cat /Users/carrietribble/Desktop/align_new/final_alignments/17.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/trnL_trnF.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/trnL_trnF.fasta
+  	cat /Users/carrietribble/Desktop/align_new/final_alignments/19.fasta /Users/carrietribble/Desktop/outgroups/outgroup_alignments/trnY_trnD.txt > /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/trnY_trnD.fasta
+
+
+ g) realign everything with mafft 
+ 
+ 	mafft --auto ITS.fasta > aligned/aligned_ITS.fasta
+ 	mafft --auto atpB.fasta > aligned/aligned_atpB.fasta
+ 	mafft --auto atpB_rbcL_spacer.fasta > aligned/aligned_atpB_rbcL_spacer.fasta
+ 	mafft --auto atpF_atpH.fasta > aligned/aligned_atpF_atpH.fasta
+ 	mafft --auto cob.fasta > aligned/aligned_cob.fasta
+ 	mafft --auto matK.fasta > aligned/aligned_matK.fasta
+ 	mafft --auto matR.fasta > aligned/aligned_matR.fasta
+ 	mafft --auto ndhF.fasta > aligned/aligned_ndhF.fasta
+ 	mafft --auto rbcL.fasta > aligned/aligned_rbcL.fasta
+ 	mafft --auto rpl16.fasta > aligned/aligned_rpl16.fasta
+ 	mafft --auto rpl32_trnL.fasta > aligned/aligned_rpl32_trnL.fasta
+ 	mafft --auto rsp16.fasta > aligned/aligned_rsp16.fasta
+ 	mafft --auto psbA.fasta > aligned/aligned_psbA.fasta
+ 	mafft --auto trnL_trnF.fasta > aligned/aligned_trnL_trnF.fasta
+ 	mafft --auto trnY_trnD.fasta > aligned/aligned_trnY_trnD.fasta
+ 	
+ h) evaluate by eye 
+ 	
+	aligned_atpF_atpH.fasta align with pasta
+	aligned_ITS.fasta align with pasta
+	aligned_matR took reverse complement of DQ401382.1 Oryza sativa maturase (matR) gene, partial cds; mitochondrial
+	aligned_psbA.fasta  > reverse complement align (mafft --auto --adjustdirection) > remove duplicates (get_unique_seqs.py) > realign (mafft --auto) > unique_combined_psba_new_aligned.fasta should align with pasta
+	aligned_rpl16.fasta align with pasta 
+	aligned_rpl32.fasta align with pasta
+	aligned_rps16.fasta align with pasta
+	aligned_trnl_trnF.fasta align with pasta 
+	aligned_trnY_trnD.fasta align with pasta 
+ 	
+ 	
+ g) realign selected alignments with pasta 
+ 	
+ 	mkdir pasta_aligned_atpF_atpH
+ 	cp aligned_atpF_atpH.fasta pasta_aligned_atpF_atpH
+ 	cd pasta_aligned_atpF_atpH
+ 	run_pasta.py -i aligned_atpF_atpH.fasta --iter-limit 5
+ 	
+ 	cd ..
+ 	
+ 	mkdir pasta_aligned_ITS
+ 	cp aligned_ITS.fasta pasta_aligned_ITS
+ 	cd pasta_aligned_ITS
+ 	run_pasta.py -i aligned_ITS.fasta --iter-limit 5
+ 	
+ 	cd ..
+ 	
+  	mkdir pasta_aligned_psbA
+ 	cp unique_combined_psba_new_aligned.fasta pasta_aligned_psbA
+ 	cd pasta_aligned_psbA
+ 	run_pasta.py -i unique_combined_psba_new_aligned.fasta --iter-limit 5	
+
+	cd ..
+
+  	mkdir pasta_aligned_rpl16
+ 	cp aligned_rpl16.fasta pasta_aligned_rpl16
+ 	cd pasta_aligned_rpl16
+ 	run_pasta.py -i aligned_rpl16.fasta --iter-limit 5
+ 	
+ 	cd .. 
+ 	
+  	mkdir pasta_aligned_rpl32
+ 	cp aligned_rpl32_trnL.fasta pasta_aligned_rpl32
+ 	cd pasta_aligned_rpl32
+ 	run_pasta.py -i aligned_rpl32_trnL.fasta --iter-limit 5
+ 	
+ 	cd ..	 	
+ 	
+ 	mkdir pasta_aligned_rps16
+ 	cp aligned_rps16.fasta pasta_aligned_rps16
+ 	cd pasta_aligned_rps16
+ 	run_pasta.py -i aligned_rps16.fasta --iter-limit 5
+ 	
+ 	cd ..
+ 	
+ 	mkdir pasta_aligned_trnl_trnF
+ 	cp aligned_trnl_trnF.fasta pasta_aligned_trnl_trnF
+ 	cd pasta_aligned_trnl_trnF
+ 	run_pasta.py -i aligned_trnl_trnF.fasta --iter-limit 5
+ 	
+ 	cd ..
+ 	
+ 	mkdir pasta_aligned_trnY_trnD
+ 	cp aligned_trnY_trnD.fasta pasta_aligned_trnY_trnD
+ 	cd pasta_aligned_trnY_trnD
+ 	run_pasta.py -i aligned_trnY_trnD.fasta --iter-limit 5
+ 	
+ 
+ h) move finalized alignments docs to new directory 
+ 
+ 	cd /Users/carrietribble/Desktop/align_new/final_alignments/outgroup_combined/aligned
+ 	mkdir chosen_alignments
+ 	
+ 	cp aligned_atpB_rbcL_spacer.fasta chosen_alignments
+ 	cp aligned_atpB.fasta chosen_alignments
+ 	cp pasta_aligned_atpF_atpH/pastajob.marker001.aligned_atpF_atpH.aln chosen_alignments
+ 	cp aligned_cob.fasta chosen_alignments
+ 	cp pasta_aligned_ITS/pastajob.marker001.aligned_ITS.aln chosen_alignments
+ 	cp aligned_matK.fasta chosen_alignments
+ 	cp aligned_matR.fasta chosen_alignments
+ 	cp aligned_ndhF.fasta chosen_alignments
+ 	cp pasta_aligned_psbA/pastajob.marker001.unique_combined_psba_new_aligned.aln chosen_alignments
+ 	cp aligned_rbcL.fasta chosen_alignments
+ 	cp pasta_aligned_rpl16/pastajob.marker001.aligned_rpl16.aln chosen_alignments
+ 	cp pasta_aligned_rpl32/pastajob.marker001.aligned_rpl32.aln chosen_alignments
+ 	cp pasta_aligned_rps16/pastajob.marker001.aligned_rps16.aln chosen_alignments
+ 	cp pasta_aligned_trnl_trnF/pastajob.marker001.aligned_trnl_trnF.aln chosen_alignments
+ 	cp pasta_aligned_trnY_trnD/pastajob.marker001.aligned_trnY_trnD.aln chosen_alignments
+
+	cd chosen_alignments
+ 	
+ 
+ i) rename all sequences as Genus species to allow for concatenation 
+ 
+  [Sequence S72305.1 manually renamed so Genus species follows the genbank accession number for easier downstream processing]
+  
+ 	rename_as_taxon_name.py
+ 
+ j) remove duplicate taxa in each region
+ 
+ If any particular taxon is duplicated, take the first one 
+ Remove all unidentified taxa
+ 
+ remove_dup_taxa.py
+ 
+ k) concatenate w/ Sequence Matrix and save as super_matrix.phylip & make test RAXML tree 
+ 
+ l) edits after looking at RAxML tree: 
+ 
+  - Rerun rename_as_taxon_name.py with edit adding cf as additional term to remove (Corsia cf)
+  	also change taxa names for:
+  		- O sativa mitochondrial to Oryza sativa
+  		- Amana anhuiensis KEEP
+		- Amana edulis change Tulipa edulis to Amana edulis
+		- Amana erythronioides change Tulipa erythronioides to Amana erythronioides
+		- Amana wanzhensis Keep
+			
+  - Change some name typos with edit_taxon_names.py: 
+  		- Ripogonum vs. Rhipogonum
+  		- Ravenea hildebrandtii vs Ravenea hildebrandti
+  		- Bulbocodium vernum - > Colchicum vernum (verified by the plant list) 
+  		- Trillidium govanianum - > Trillium govanianum (verified by the plant list) 
+  		- Leontochir ovallei -> Bomarea ovallei (verified by the plant list) 
+
+ - rerun remove_dup_taxa.py with new renamed files 
+ 
+ - make supermatrix with Sequence Matrix - save as fasta using AliView
+    
+    use R to get boundaries of supermatrix - 
+    
+    library('evobiR')
+	setwd("/Users/carrietribble/Desktop/trimmed") # directory with only the fasta files you want to concatenate 
+	SuperMatrix()
+    
+ - Remove problem taxa Tricyrtis amethystina (super long branch) and Gagea spathacea (falling out into poales) 
+  	remove_problem_taxa.py
+  
+ j) identify columns with < 1% sequence coverage to exclude from analysis 
+ 
+ create_excluded_regions_file.py
+  
+  m) make backbone phylogeny 
+  
+  export list of taxa and families from R 
+  to tip_with_family.csv
+  
+  then use complete_backbone_tree.py to substitute the tip names in for each family 
+  
+  n) use the -e option in RAxML to created new alignment and partition files, then rerun using those
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  

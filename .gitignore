@@ -1,3 +1,9 @@
+data/.DS_Store
+data/morphology/.DS_Store
+paramo/.DS_Store
+paramo/output/.DS_Store
+.DS_Store
+.Rhistory
 bayou/figures/
 bayou/output/
 bayou/rb_version/
