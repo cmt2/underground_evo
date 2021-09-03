@@ -7,19 +7,29 @@ library(ggthemes)
 library(RevGadgets)
 library(coda)
 
-unique_analyses <- c("bio15_tree_1", "bio15_tree_2", 
-                     "bio15_tree_3", "bio15_tree_4", 
-                     "bio15_tree_5", 
-                     "bio4_tree_1", "bio4_tree_2",
-                     "bio4_tree_3", "bio4_tree_4",
-                     "bio4_tree_5")
+# unique_analyses <- c("bio15_tree_1", "bio15_tree_2", 
+#                      "bio15_tree_3", "bio15_tree_4", 
+#                      "bio15_tree_5", 
+#                      "bio4_tree_1", "bio4_tree_2",
+#                      "bio4_tree_3", "bio4_tree_4",
+#                      "bio4_tree_5")
+unique_analyses <- c(#"bio15_tree_6", 
+                     "bio15_tree_7", 
+                     "bio15_tree_8", "bio15_tree_9", 
+                     "bio15_tree_10", 
+                     "bio4_tree_6", "bio4_tree_7",
+                     "bio4_tree_8", "bio4_tree_9",
+                     "bio4_tree_10")
 
 for (analysis in unique_analyses) {
   print(paste0("working on analysis ",analysis))
   # bayou data
-  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/", analysis, "_r001.RData"))
-  b <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
-  rm(chainOU)
+  # load(paste0("~/Documents/underground_evo/bayou/output/processed_output/", analysis, "_r001.RData"))
+  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/", analysis, ".RData"))
+  # b <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
+  b <- subset_chainOU(chainOU = combined, 1000)
+  # rm(chainOU)
+  rm(combined)
   tree <- unlist(strsplit(analysis, split = "_"))[3]
   load(paste0("~/Documents/underground_evo/paramo/output/paramo_results", tree, ".RData"))
   p <- results$EP.maps
@@ -47,7 +57,7 @@ for (analysis in unique_analyses) {
     }
   }
   # save comparison dataframes 
-  write.csv(df, file = paste0("comparison/results/", analysis, "_collapsed.csv"))
+  write.csv(df, file = paste0("comparison/combined_results/", analysis, "_collapsed.csv"))
   
   # plot densities 
   #df_melted <- reshape2::melt(df)
@@ -65,7 +75,7 @@ for (analysis in unique_analyses) {
   #dev.off()
   
   # plot traces of densities to assess convergence 
-  pdf(paste0("comparison/raw_figures/trace_", analysis, "_collapsed.pdf"))
+  pdf(paste0("comparison/figures/trace_figures/trace_", analysis, "_collapsed.pdf"))
   for (i in 1:ncol(df)) {
     t <- as.mcmc(df[,i][!is.na(df[,i])])
     traceplot(t, main = paste0("Var = ", colnames(df)[i]))

@@ -2,7 +2,7 @@
 setwd("~/Documents/underground_evo")
 library(SCATE.shortcourse)
 
-for (tree in 2:5) {
+for (tree in 7:10) {
   print(paste0("working on tree ", tree))
   load(paste0("paramo/output/paramo_results", tree, ".RData"))
   qs <- results[[1]]

@@ -1,9 +1,9 @@
-plot_metric <- function(clim_var, char) {
-  results <- read.csv("comparison/metric_results.csv", row.names = 1)
+plot_metric <- function(clim_var, char, trees) {
+  results <- read.csv("comparison/metric_results_all.csv", row.names = 1)
   if (char != "combined") {
-    cols <- paste0("ch", char, "_", clim_var, "_", 1:5)
+    cols <- paste0("ch", char, "_", clim_var, "_", trees)
   } else if (char == "combined") {
-    cols <- paste0("combined_", clim_var, "_", 1:5)
+    cols <- paste0("combined_", clim_var, "_", trees)
   }
   metric <- unlist(results[,cols])
   names(metric) <- NULL

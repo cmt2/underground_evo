@@ -10,12 +10,12 @@ loadRData <- function(fileName){
 library(bayou)
 
 # names to combine over
-unique_analyses <- c("bio15_tree_1", "bio15_tree_2", 
-                     "bio15_tree_3", "bio15_tree_4", 
-                     "bio15_tree_5", 
-                     "bio4_tree_1", "bio4_tree_2",
-                     "bio4_tree_3", "bio4_tree_4",
-                     "bio4_tree_5")
+unique_analyses <- c("bio15_tree_6", "bio15_tree_7", 
+                     "bio15_tree_8", "bio15_tree_9", 
+                     "bio15_tree_10", 
+                     "bio4_tree_6", "bio4_tree_7",
+                     "bio4_tree_8", "bio4_tree_9",
+                     "bio4_tree_10")
 
 for (analysis in unique_analyses) {
   to_combine <- list()

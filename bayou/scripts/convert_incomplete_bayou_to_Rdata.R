@@ -2,7 +2,6 @@
 
 library(bayou)
 setwd("/Users/carrietribble/Documents/underground_evo/bayou/output")
-
 # read in the tree data and the climate data 
 clim_all <- read.csv("~/Documents/underground_evo/data/climate_estimation/max_wc_all.csv", row.names = 1)
 t_all <- ape::read.tree("~/Documents/underground_evo/data/phylogeny/combined_subsampled_dated.tre")
@@ -12,16 +11,16 @@ t_all <- ape::read.tree("~/Documents/underground_evo/data/phylogeny/combined_sub
 # with fake empty files 
 
 bayou_output_dirs <- 
-  c("bio15_tree_1_r001", "bio15_tree_1_r002", "bio15_tree_1_r003", "bio15_tree_1_r003_2",
-    "bio15_tree_2_r001", "bio15_tree_2_r002", "bio15_tree_2_r003", "bio15_tree_2_r003_2",
-    "bio15_tree_3_r001", "bio15_tree_3_r002", "bio15_tree_3_r003", "bio15_tree_3_r003_2",
-    "bio15_tree_4_r001", "bio15_tree_4_r002", "bio15_tree_4_r003", "bio15_tree_4_r003_2",
-    "bio15_tree_5_r001", "bio15_tree_5_r002", "bio15_tree_5_r003", "bio15_tree_5_r003_2",
-    "bio4_tree_1_r001", "bio4_tree_1_r002", "bio4_tree_1_r003", "bio4_tree_1_r003_2",
-    "bio4_tree_2_r001", "bio4_tree_2_r002", "bio4_tree_2_r003", "bio4_tree_2_r003_2",
-    "bio4_tree_3_r001", "bio4_tree_3_r002", "bio4_tree_3_r003", "bio4_tree_3_r003_2",
-    "bio4_tree_4_r001", "bio4_tree_4_r002", "bio4_tree_4_r003", "bio4_tree_4_r003_2",
-    "bio4_tree_5_r001", "bio4_tree_5_r002", "bio4_tree_5_r003", "bio4_tree_5_r003_2")
+  c("bio15_tree_6_r001", "bio15_tree_6_r002", "bio15_tree_6_r003", "bio15_tree_6_r004",
+    "bio15_tree_7_r001", "bio15_tree_7_r002", "bio15_tree_7_r003", "bio15_tree_7_r004",
+    "bio15_tree_8_r001", "bio15_tree_8_r002", "bio15_tree_8_r003", "bio15_tree_8_r004",
+    "bio15_tree_9_r001", "bio15_tree_9_r002", "bio15_tree_9_r003", "bio15_tree_9_r004",
+    "bio15_tree_10_r001", "bio15_tree_10_r002", "bio15_tree_10_r003", "bio15_tree_10_r004",
+    "bio4_tree_6_r001", "bio4_tree_6_r002", "bio4_tree_6_r003", "bio4_tree_6_r004",
+    "bio4_tree_7_r001", "bio4_tree_7_r002", "bio4_tree_7_r003", "bio4_tree_7_r004",
+    "bio4_tree_8_r001", "bio4_tree_8_r002", "bio4_tree_8_r003", "bio4_tree_8_r004",
+    "bio4_tree_9_r001", "bio4_tree_9_r002", "bio4_tree_9_r003", "bio4_tree_9_r004",
+    "bio4_tree_10_r001", "bio4_tree_10_r002", "bio4_tree_10_r003", "bio4_tree_10_r004")
 
 for (dir in bayou_output_dirs) {
   print(paste0("Working on directory: ", dir))
@@ -101,14 +100,14 @@ for (dir in bayou_output_dirs) {
                         plot.prior = FALSE)
   startpars <- priorSim(priorOU, t, plot=FALSE)$pars[[1]]
   priorOU(startpars)
-  set.seed(1)
+  #set.seed(1)
   
   # this will create the files in the directory 
   mcmcOU <- bayou.makeMCMC(t, 
                            clim, 
                            SE = 0.1, 
                            prior = priorOU, 
-                           new.dir = dir, 
+                           file.dir	= dir, 
                            outname = outname, 
                            samp = 100,
                            plot.freq = NULL)

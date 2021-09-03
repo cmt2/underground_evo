@@ -10,7 +10,8 @@ library(RevGadgets)
 library(coda)
 
 
-trees <- 1:5
+# trees <- 1:5
+trees <- 7:10
 
 for (tree in trees) {
   # load paramo results once 
@@ -19,13 +20,19 @@ for (tree in trees) {
   rm(results)
   
   # load bayou data once
-  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, "_r001.RData"))
-  b4 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
-  rm(chainOU)
+  # load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, "_r001.RData"))
+  # b4 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
+  # rm(chainOU)
+  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, ".RData"))
+  b4 <- subset_chainOU(chainOU = combined, 1000)
+  rm(combined)
   
-  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, "_r001.RData"))
-  b15 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
-  rm(chainOU)
+  # load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, "_r001.RData"))
+  # b15 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
+  # rm(chainOU)
+  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, ".RData"))
+  b15 <- subset_chainOU(chainOU = combined, 1000)
+  rm(combined)
   
   
   for (p in 1:3) {
@@ -55,7 +62,7 @@ for (tree in trees) {
     write.csv(df, file = paste0("comparison/character_results/bio4_tree_", tree, "_character_", p, "_collapsed.csv"))
     
     # plot traces of densities to assess convergence 
-    pdf(paste0("comparison/trace_figures/trace_bio4_tree_", tree, "_character_", p, "_collapsed.pdf"))
+    pdf(paste0("comparison/figures/trace_figures/trace_bio4_tree_", tree, "_character_", p, "_collapsed.pdf"))
     for (i in 1:ncol(df)) {
       t <- as.mcmc(df[,i][!is.na(df[,i])])
       traceplot(t, main = paste0("Var = ", colnames(df)[i]))
@@ -89,7 +96,7 @@ for (tree in trees) {
     write.csv(df, file = paste0("comparison/character_results/bio15_tree_", tree, "_character_", p, "_collapsed.csv"))
     
     # plot traces of densities to assess convergence 
-    pdf(paste0("comparison/trace_figures/trace_bio15_tree_", tree, "_character_", p, "_collapsed.pdf"))
+    pdf(paste0("comparison/figures/trace_figures/trace_bio15_tree_", tree, "_character_", p, "_collapsed.pdf"))
     for (i in 1:ncol(df)) {
       t <- as.mcmc(df[,i][!is.na(df[,i])])
       traceplot(t, main = paste0("Var = ", colnames(df)[i]))

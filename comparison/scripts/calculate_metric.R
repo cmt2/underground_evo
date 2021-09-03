@@ -1,19 +1,33 @@
 # estimate comparison metric 
 chars <- c("1", "2","3","combined")
 clim_vars <- c("bio4","bio15")
-trees <- as.character(1:5)
+trees <- as.character(1:10)
 
-results_cols <- c("ch1_bio4_1","ch1_bio4_2","ch1_bio4_3","ch1_bio4_4","ch1_bio4_5",
-                  "ch1_bio15_1","ch1_bio15_2","ch1_bio15_3","ch1_bio15_4","ch1_bio15_5",
-                  
-                  "ch2_bio4_1","ch2_bio4_2","ch2_bio4_3","ch2_bio4_4","ch2_bio4_5",
-                  "ch2_bio15_1","ch2_bio15_2","ch2_bio15_3","ch2_bio15_4","ch2_bio15_5",
-                  
-                  "ch3_bio4_1","ch3_bio4_2","ch3_bio4_3","ch3_bio4_4","ch3_bio4_5",
-                  "ch3_bio15_1","ch3_bio15_2","ch3_bio15_3","ch3_bio15_4","ch3_bio15_5",
-                  
-                  "combined_bio4_1","combined_bio4_2","combined_bio4_3","combined_bio4_4","combined_bio4_5",
-                  "combined_bio15_1","combined_bio15_2","combined_bio15_3","combined_bio15_4","combined_bio15_5")
+# results_cols <- c("ch1_bio4_1","ch1_bio4_2","ch1_bio4_3","ch1_bio4_4","ch1_bio4_5",
+#                   "ch1_bio15_1","ch1_bio15_2","ch1_bio15_3","ch1_bio15_4","ch1_bio15_5",
+#                   
+#                   "ch2_bio4_1","ch2_bio4_2","ch2_bio4_3","ch2_bio4_4","ch2_bio4_5",
+#                   "ch2_bio15_1","ch2_bio15_2","ch2_bio15_3","ch2_bio15_4","ch2_bio15_5",
+#                   
+#                   "ch3_bio4_1","ch3_bio4_2","ch3_bio4_3","ch3_bio4_4","ch3_bio4_5",
+#                   "ch3_bio15_1","ch3_bio15_2","ch3_bio15_3","ch3_bio15_4","ch3_bio15_5",
+#                   
+#                   "combined_bio4_1","combined_bio4_2","combined_bio4_3","combined_bio4_4","combined_bio4_5",
+#                   "combined_bio15_1","combined_bio15_2","combined_bio15_3","combined_bio15_4","combined_bio15_5")
+
+i = 1
+for (ch in chars) {
+  for (cv in clim_vars) {
+    for (t in trees) {
+      if (grepl("combined", ch)) {
+        results_cols[i] <- paste0(ch, "_", cv, "_", t)
+      } else {
+        results_cols[i] <- paste0("ch",ch, "_", cv, "_", t)
+      }
+      i = i + 1
+    }
+  }
+}
 
 results <- data.frame(matrix(nrow = 1000, ncol = length(results_cols)))
 colnames(results) <- results_cols
@@ -73,5 +87,5 @@ for (ch in chars) {
   }
 }
 
-write.csv(results, file = "comparison/metric_results.csv")
+write.csv(results, file = "comparison/metric_results_all.csv")
 

@@ -7,7 +7,7 @@ library(ggthemes)
 library(RevGadgets)
 library(coda)
 
-trees <- 2:5
+trees <- 9:10
 
 for (tree in trees) {
   # load paramo data once
@@ -18,46 +18,100 @@ for (tree in trees) {
 
   # load bayou data once
   print(paste0("loading bayou bio 4 tree ", tree))
-  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, "_r001.RData"))
-  b4 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
-  rm(chainOU)
+  # load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, "_r001.RData"))
+  # b4 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
+  # rm(chainOU)
+  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, ".RData"))
+  b4 <- subset_chainOU(chainOU = combined, 1000)
+  rm(combined)
   
   print(paste0("loading bayou bio 15 tree ", tree))
-  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, "_r001.RData"))
-  b15 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
-  rm(chainOU)
+  # load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, "_r001.RData"))
+  # b15 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
+  # rm(chainOU)
+  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, ".RData"))
+  b15 <- subset_chainOU(chainOU = combined, 1000)
+  rm(combined)
   
   print("fixing trees with constant states")
+  # in tree 1, simulation 146 is constant for character 3 in state 4
+  # in tree 2, simulations 200, 360, 536, and 956 have character 3 in state 4
+  # in tree 4, simulation 96 has character 1 in state 3; simulation 648 has character 3 in state 4
+  # in tree 5, simulation 847 has character 1 in state 3; simulation 177 has character 3 in state 4
+  # in tree 8, simulation 489 is constant for character 3 in state 4; simulation 853 is constant for character 3 in state 4; simulation 882 is constant for character 3 in state 4; in tree 8, simulation 919 is constant for character 3 in state 4
+  # in tree 9, simulation 588 is constant for character 1 in state 3
+  # in tree 10, simulation 103 is constant for character 3 in state 4; simulation 269 is constant for character 3 in state 4
+  
   if (tree == 1) {
     for (branch in 1:length(param_chars[[3]][[146]]$maps)) {
-      names(param_chars[[3]][[146]]$maps[[branch]]) <- rep("4", times = length(param_chars[[3]][[146]]$maps[[branch]]))
+      names(param_chars[[3]][[146]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[146]]$maps[[branch]]))
     }
   } else if (tree == 2) {
     for (branch in 1:length(param_chars[[3]][[200]]$maps)) {
-      names(param_chars[[3]][[200]]$maps[[branch]]) <- rep("4", times = length(param_chars[[3]][[200]]$maps[[branch]]))
+      names(param_chars[[3]][[200]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[200]]$maps[[branch]]))
     }
     for (branch in 1:length(param_chars[[3]][[360]]$maps)) {
-      names(param_chars[[3]][[360]]$maps[[branch]]) <- rep("4", times = length(param_chars[[3]][[360]]$maps[[branch]]))
+      names(param_chars[[3]][[360]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[360]]$maps[[branch]]))
     }
     for (branch in 1:length(param_chars[[3]][[536]]$maps)) {
-      names(param_chars[[3]][[536]]$maps[[branch]]) <- rep("4", times = length(param_chars[[3]][[536]]$maps[[branch]]))
+      names(param_chars[[3]][[536]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[536]]$maps[[branch]]))
     }
     for (branch in 1:length(param_chars[[3]][[956]]$maps)) {
-      names(param_chars[[3]][[956]]$maps[[branch]]) <- rep("4", times = length(param_chars[[3]][[956]]$maps[[branch]]))
+      names(param_chars[[3]][[956]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[956]]$maps[[branch]]))
     }
   } else if (tree == 4) {
     for (branch in 1:length(param_chars[[1]][[96]]$maps)) {
-      names(param_chars[[1]][[96]]$maps[[branch]]) <- rep("3", times = length(param_chars[[1]][[96]]$maps[[branch]]))
+      names(param_chars[[1]][[96]]$maps[[branch]]) <-
+        rep("3", times = length(param_chars[[1]][[96]]$maps[[branch]]))
     }
     for (branch in 1:length(param_chars[[3]][[648]]$maps)) {
-      names(param_chars[[3]][[648]]$maps[[branch]]) <- rep("4", times = length(param_chars[[3]][[648]]$maps[[branch]]))
+      names(param_chars[[3]][[648]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[648]]$maps[[branch]]))
     }
   } else if (tree == 5) {
     for (branch in 1:length(param_chars[[1]][[847]]$maps)) {
-      names(param_chars[[1]][[847]]$maps[[branch]]) <- rep("3", times = length(param_chars[[1]][[847]]$maps[[branch]]))
+      names(param_chars[[1]][[847]]$maps[[branch]]) <-
+        rep("3", times = length(param_chars[[1]][[847]]$maps[[branch]]))
     }
     for (branch in 1:length(param_chars[[3]][[177]]$maps)) {
-      names(param_chars[[3]][[177]]$maps[[branch]]) <- rep("4", times = length(param_chars[[3]][[177]]$maps[[branch]]))
+      names(param_chars[[3]][[177]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[177]]$maps[[branch]]))
+    }
+  } else if (tree == 8) {
+    for (branch in 1:length(param_chars[[3]][[489]]$maps)) {
+      names(param_chars[[3]][[489]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[489]]$maps[[branch]]))
+    }
+    for (branch in 1:length(param_chars[[3]][[853]]$maps)) {
+      names(param_chars[[3]][[853]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[853]]$maps[[branch]]))
+    }
+    for (branch in 1:length(param_chars[[3]][[882]]$maps)) {
+      names(param_chars[[3]][[882]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[882]]$maps[[branch]]))
+    }
+    for (branch in 1:length(param_chars[[3]][[919]]$maps)) {
+      names(param_chars[[3]][[919]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[919]]$maps[[branch]]))
+    }
+  } else if (tree == 9) {
+    for (branch in 1:length(param_chars[[1]][[588]]$maps)) {
+      names(param_chars[[1]][[588]]$maps[[branch]]) <-
+        rep("3", times = length(param_chars[[1]][[588]]$maps[[branch]]))
+    }
+  } else if (tree == 10) {
+    for (branch in 1:length(param_chars[[3]][[103]]$maps)) {
+      names(param_chars[[3]][[103]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[103]]$maps[[branch]]))
+    }
+    for (branch in 1:length(param_chars[[3]][[269]]$maps)) {
+      names(param_chars[[3]][[269]]$maps[[branch]]) <-
+        rep("4", times = length(param_chars[[3]][[269]]$maps[[branch]]))
     }
   }
 
@@ -88,7 +142,7 @@ for (tree in trees) {
     write.csv(df, file = paste0("comparison/character_results/sim_bio4_tree_", tree, "_character_", p, "_collapsed.csv"))
     
     # plot traces of densities to assess convergence 
-    pdf(paste0("comparison/trace_figures/sim_trace_bio4_tree_", tree, "_character_", p, "_collapsed.pdf"))
+    pdf(paste0("comparison/figures/trace_figures/sim_trace_bio4_tree_", tree, "_character_", p, "_collapsed.pdf"))
     for (i in 1:ncol(df)) {
       t <- as.mcmc(df[,i][!is.na(df[,i])])
       traceplot(t, main = paste0("Var = ", colnames(df)[i]))
@@ -122,7 +176,7 @@ for (tree in trees) {
     write.csv(df, file = paste0("comparison/character_results/sim_bio15_tree_", tree, "_character_", p, "_collapsed.csv"))
     
     # plot traces of densities to assess convergence 
-    pdf(paste0("comparison/trace_figures/sim_trace_bio15_tree_", tree, "_character_", p, "_collapsed.pdf"))
+    pdf(paste0("comparison/figures/trace_figures/sim_trace_bio15_tree_", tree, "_character_", p, "_collapsed.pdf"))
     for (i in 1:ncol(df)) {
       t <- as.mcmc(df[,i][!is.na(df[,i])])
       traceplot(t, main = paste0("Var = ", colnames(df)[i]))
