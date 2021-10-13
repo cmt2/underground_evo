@@ -76,7 +76,7 @@ plot_simmap = function(time_tree, tree, data, simmaps, states, colors, nt=1001, 
         this_x1  = branch_x1[[i]] + xx[ time_tree$edge[i,1] ]
         this_y0  = yy[ time_tree$edge[i,2] ]
         this_col = branch_sample_colors[[i]]
-        segments(x0=this_x0, x1=this_x1, y0=this_y0, col=this_col, ...)
+        segments(x0=this_x0, x1=this_x1, y0=this_y0, col=this_col, lwd = lwd, ...)
 
         # get the vertical segment
         this_x0  = xx[ time_tree$edge[i,1] ]
@@ -84,7 +84,7 @@ plot_simmap = function(time_tree, tree, data, simmaps, states, colors, nt=1001, 
         this_y1  = yy[ time_tree$edge[i,2] ]
 
         this_col = branch_sample_colors[[i]][1]
-        segments(x0=this_x0, y0=this_y0, y1=this_y1, col=this_col, ...)
+        segments(x0=this_x0, y0=this_y0, y1=this_y1, col=this_col, lwd = lwd, ...)
 
     }
 
