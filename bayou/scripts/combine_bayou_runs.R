@@ -1,7 +1,7 @@
 ### combine Bayou runs! 
 
 # basic shit 
-setwd("~/Documents/underground_evo/bayou/output/processed_output/")
+setwd("~/Documents/underground_evo/bayou/output")
 loadRData <- function(fileName){
   #loads an RData file, and returns it
   load(fileName)
@@ -10,12 +10,9 @@ loadRData <- function(fileName){
 library(bayou)
 
 # names to combine over
-unique_analyses <- c("bio15_tree_6", "bio15_tree_7", 
-                     "bio15_tree_8", "bio15_tree_9", 
-                     "bio15_tree_10", 
-                     "bio4_tree_6", "bio4_tree_7",
-                     "bio4_tree_8", "bio4_tree_9",
-                     "bio4_tree_10")
+df <- expand.grid(c("bayou_bio15_tree","bayou_bio4_tree"), as.character(1:10), stringsAsFactors = FALSE)
+unique_analyses  <- apply(df, 1, paste0, collapse = "_")
+
 
 for (analysis in unique_analyses) {
   to_combine <- list()

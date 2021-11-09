@@ -17,7 +17,7 @@ echo starting r runs
 Rscript bayou/scripts/bayou_Rscript.R --i 1  --clim_var bio15 --run_num 4 --ngen 3000000 &
 Rscript bayou/scripts/bayou_Rscript.R --i 1  --clim_var bio4  --run_num 4 --ngen 3000000 &
 Rscript bayou/scripts/bayou_Rscript.R --i 2  --clim_var bio15 --run_num 4 --ngen 3000000 &
-Rscript bayou/scripts/bayou_Rscript.R --i 3  --clim_var bio4  --run_num 4 --ngen 3000000 &
+Rscript bayou/scripts/bayou_Rscript.R --i 2  --clim_var bio4  --run_num 4 --ngen 3000000 &
 Rscript bayou/scripts/bayou_Rscript.R --i 3  --clim_var bio15 --run_num 4 --ngen 3000000 &
 Rscript bayou/scripts/bayou_Rscript.R --i 3  --clim_var bio4  --run_num 4 --ngen 3000000 &
 Rscript bayou/scripts/bayou_Rscript.R --i 4  --clim_var bio15 --run_num 4 --ngen 3000000 &
