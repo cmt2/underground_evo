@@ -10,29 +10,35 @@ library(RevGadgets)
 library(coda)
 
 
-# trees <- 1:5
+
 trees <- 7:10
 
 for (tree in trees) {
   # load paramo results once 
+  print(paste0("loading paramo results for tree ", tree))
   load(paste0("~/Documents/underground_evo/paramo/output/paramo_results", tree, ".RData"))
+  print("finished loading paramo")
   paramo <- results$IND.maps
   rm(results)
+  gc()
+  print("removed paramo results object")
   
   # load bayou data once
   # load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, "_r001.RData"))
   # b4 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
   # rm(chainOU)
-  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio4_tree_", tree, ".RData"))
+  load(paste0("~/Documents/underground_evo/bayou/output/bayou_bio4_tree_", tree, ".RData"))
   b4 <- subset_chainOU(chainOU = combined, 1000)
   rm(combined)
+  gc()
   
   # load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, "_r001.RData"))
   # b15 <- subset_chainOU(chainOU = set.burnin(chainOU, 0.10), 1000)
   # rm(chainOU)
-  load(paste0("~/Documents/underground_evo/bayou/output/processed_output/bio15_tree_", tree, ".RData"))
+  load(paste0("~/Documents/underground_evo/bayou/output/bayou_bio15_tree_", tree, ".RData"))
   b15 <- subset_chainOU(chainOU = combined, 1000)
   rm(combined)
+  gc()
   
   
   for (p in 1:3) {
